@@ -1,8 +1,7 @@
 {
     "name": "sourceboat/laravel-clockify-api",
-    "description": "",
-    "keywords": [],
-    "homepage": "",
+    "description": "Laravel repository to fetch reports from the Clockify.me reports API",
+    "keywords": ["laravel", "clockify", "api"],
     "license": "MIT",
     "require": {
         "php": ">=8.1",
