@@ -34,7 +34,7 @@ class SummaryReportTest extends TestCase
         });
     }
 
-    public function provider()
+    public static function provider()
     {
         $users = [1, 2, 3];
         $tasks = [4, 5, 6];
