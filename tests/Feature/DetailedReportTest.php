@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 use Sourceboat\LaravelClockifyApi\Repositories\ClockifyRepository;
 use Sourceboat\LaravelClockifyApi\Tests\TestCase;
 
-class SummaryReportTest extends TestCase
+class DetailedReportTest extends TestCase
 {
 
     /**
@@ -20,7 +20,7 @@ class SummaryReportTest extends TestCase
     {
         Http::fake();
 
-        $summaryReport = ClockifyRepository::makeSummaryReport();
+        $summaryReport = ClockifyRepository::makeDetailedReport();
 
         // add attributes to request by calling its function (defined by keys)
         collect($requestAtt)->each(static function ($value, $attribute) use ($summaryReport) {
@@ -39,15 +39,10 @@ class SummaryReportTest extends TestCase
         $users = [1, 2, 3];
         $tasks = [4, 5, 6];
         $tagIds = [7, 8, 9];
-        $defaultFilterGroups = [
-            0 => 'USER',
-            1 => 'PROJECT',
-            2 => 'TIMEENTRY',
-        ];
-        $customFilterGroups = [
-            0 => 'USER',
-            1 => 'TASK',
-            2 => 'TAG',
+        $detailedFilter = [
+            'page' => 1,
+            'pageSize' => 50,
+            'sortColumn' => 'DATE',
         ];
         $defaultStart = now()->startOfYear()->toISOString();
         $defaultEnd = now()->endOfYear()->toISOString();
@@ -62,9 +57,7 @@ class SummaryReportTest extends TestCase
                 [
                     'dateRangeStart' => $defaultStart,
                     'dateRangeEnd' => $defaultEnd,
-                    'summaryFilter' => [
-                        'groups' => $defaultFilterGroups,
-                    ],
+                    'detailedFilter' => $detailedFilter,
                     'users' => [
                         'ids' => $users,
                         'contains' => 'CONTAINS',
@@ -80,9 +73,7 @@ class SummaryReportTest extends TestCase
                 [
                     'dateRangeStart' => $defaultStart,
                     'dateRangeEnd' => $defaultEnd,
-                    'summaryFilter' => [
-                        'groups' => $defaultFilterGroups,
-                    ],
+                    'detailedFilter' => $detailedFilter,
                     'users' => [
                         'ids' => $users,
                         'contains' => 'CONTAINS',
@@ -103,9 +94,7 @@ class SummaryReportTest extends TestCase
                 [
                     'dateRangeStart' => $defaultStart,
                     'dateRangeEnd' => $defaultEnd,
-                    'summaryFilter' => [
-                        'groups' => $defaultFilterGroups,
-                    ],
+                    'detailedFilter' => $detailedFilter,
                     'sortOrder' => 'ASCENDING',
                     'users' => [
                         'ids' => $users,
@@ -128,9 +117,7 @@ class SummaryReportTest extends TestCase
                 [
                     'dateRangeStart' => $from,
                     'dateRangeEnd' => $defaultEnd,
-                    'summaryFilter' => [
-                        'groups' => $defaultFilterGroups,
-                    ],
+                    'detailedFilter' => $detailedFilter,
                     'sortOrder' => 'ASCENDING',
                     'users' => [
                         'ids' => $users,
@@ -154,9 +141,7 @@ class SummaryReportTest extends TestCase
                 [
                     'dateRangeStart' => $from,
                     'dateRangeEnd' => $to,
-                    'summaryFilter' => [
-                        'groups' => $defaultFilterGroups,
-                    ],
+                    'detailedFilter' => $detailedFilter,
                     'sortOrder' => 'ASCENDING',
                     'users' => [
                         'ids' => $users,
@@ -181,9 +166,7 @@ class SummaryReportTest extends TestCase
                 [
                     'dateRangeStart' => $from,
                     'dateRangeEnd' => $to,
-                    'summaryFilter' => [
-                        'groups' => $defaultFilterGroups,
-                    ],
+                    'detailedFilter' => $detailedFilter,
                     'sortOrder' => 'ASCENDING',
                     'users' => [
                         'ids' => $users,
@@ -213,9 +196,7 @@ class SummaryReportTest extends TestCase
                 [
                     'dateRangeStart' => $from,
                     'dateRangeEnd' => $to,
-                    'summaryFilter' => [
-                        'groups' => $defaultFilterGroups,
-                    ],
+                    'detailedFilter' => $detailedFilter,
                     'sortOrder' => 'ASCENDING',
                     'users' => [
                         'ids' => $users,
@@ -245,9 +226,7 @@ class SummaryReportTest extends TestCase
                 [
                     'dateRangeStart' => $from,
                     'dateRangeEnd' => $to,
-                    'summaryFilter' => [
-                        'groups' => $defaultFilterGroups,
-                    ],
+                    'detailedFilter' => $detailedFilter,
                     'sortOrder' => 'ASCENDING',
                     'users' => [
                         'ids' => $users,
@@ -265,22 +244,20 @@ class SummaryReportTest extends TestCase
                     ],
                 ],
             ],
-            'Users, tasks, sortOrder, from, to, containsTags, custom filterGroups' => [
+            'Users, tasks, sortOrder, from, to, doesNotContainTags, page 2' => [
                 [
                     'users' => $users,
                     'tasks' => $tasks,
                     'sortOrder' => 'ASCENDING',
                     'from' => $from,
                     'to' => $to,
-                    'containsTags' => $tagIds,
-                    'filterGroups' => $customFilterGroups,
+                    'doesNotContainTags' => $tagIds,
+                    'page' => 2,
                 ],
                 [
                     'dateRangeStart' => $from,
                     'dateRangeEnd' => $to,
-                    'summaryFilter' => [
-                        'groups' => $customFilterGroups,
-                    ],
+                    'detailedFilter' => array_merge($detailedFilter, ['page' => 2]),
                     'sortOrder' => 'ASCENDING',
                     'users' => [
                         'ids' => $users,
@@ -289,7 +266,39 @@ class SummaryReportTest extends TestCase
                     ],
                     'tags' => [
                         'ids' => $tagIds,
-                        'containedInTimeentry' => 'CONTAINS',
+                        'containedInTimeentry' => 'DOES_NOT_CONTAIN',
+                        'status' => 'ALL',
+                    ],
+                    'tasks' => [
+                        'ids' => $tasks,
+                        'status' => 'ALL',
+                    ],
+                ],
+            ],
+            'Users, tasks, sortOrder, from, to, doesNotContainTags, page 2, pageSize 20' => [
+                [
+                    'users' => $users,
+                    'tasks' => $tasks,
+                    'sortOrder' => 'ASCENDING',
+                    'from' => $from,
+                    'to' => $to,
+                    'doesNotContainTags' => $tagIds,
+                    'page' => 2,
+                    'pageSize' => 20,
+                ],
+                [
+                    'dateRangeStart' => $from,
+                    'dateRangeEnd' => $to,
+                    'detailedFilter' => array_merge($detailedFilter, ['page' => 2, 'pageSize' => 20]),
+                    'sortOrder' => 'ASCENDING',
+                    'users' => [
+                        'ids' => $users,
+                        'contains' => 'CONTAINS',
+                        'status' => 'ALL',
+                    ],
+                    'tags' => [
+                        'ids' => $tagIds,
+                        'containedInTimeentry' => 'DOES_NOT_CONTAIN',
                         'status' => 'ALL',
                     ],
                     'tasks' => [
