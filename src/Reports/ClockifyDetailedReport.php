@@ -18,12 +18,18 @@ class ClockifyDetailedReport extends ClockifyReport
 
     public function page(int $page): self
     {
+        if ($page < 1) {
+            throw new \InvalidArgumentException('Parameter $page must be greater than or equal to 1.');
+        }
         $this->page = $page;
         return $this;
     }
 
     public function pageSize(int $pageSize): self
     {
+        if ($pageSize < 1 || $pageSize > 250) {
+            throw new \InvalidArgumentException('Parameter $pageSize must be between 1 and 250.');
+        }
         $this->pageSize = $pageSize;
         return $this;
     }
