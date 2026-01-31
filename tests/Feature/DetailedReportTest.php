@@ -16,7 +16,7 @@ class DetailedReportTest extends TestCase
      * @param array $expected
      * @return void
      */
-    public function test(array $requestAtt, array $expected): void
+    public function testDetailedReportRequestBuildsCorrectPayload(array $requestAtt, array $expected): void
     {
         Http::fake();
 
