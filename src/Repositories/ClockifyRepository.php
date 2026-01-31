@@ -8,12 +8,12 @@ use Sourceboat\LaravelClockifyApi\Reports\ClockifySummaryReport;
 class ClockifyRepository
 {
 
-    public static function makeSummaryReport()
+    public static function makeSummaryReport(): ClockifySummaryReport
     {
         return ClockifySummaryReport::make();
     }
 
-    public static function makeDetailedReport()
+    public static function makeDetailedReport(): ClockifyDetailedReport
     {
         return ClockifyDetailedReport::make();
     }

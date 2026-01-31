@@ -16,9 +16,9 @@ abstract class ClockifyReport
 
     private const REPORTS_ENDPOINT = 'https://reports.api.clockify.me/v1';
 
-    protected $userIds = null;
+    protected ?array $userIds = null;
 
-    protected $taskIds = null;
+    protected ?array $taskIds = null;
 
     protected string $reportEndpoint = '';
 
@@ -28,9 +28,9 @@ abstract class ClockifyReport
 
     private string $workspaceId = '';
 
-    abstract public function get();
+    abstract public function get(): mixed;
 
-    abstract protected function requestData();
+    abstract protected function requestData(): array;
 
     /**
      * Create a new resource instance.
@@ -47,12 +47,12 @@ abstract class ClockifyReport
         $this->workspaceId = config('clockify.workspace_id');
     }
 
-    public static function make()
+    public static function make(): static
     {
         return new static;
     }
 
-    public function executeApiCall()
+    public function executeApiCall(): \Illuminate\Http\Client\Response
     {
         $endpoint = '/workspaces/' . $this->workspaceId . '/reports' . $this->reportEndpoint;
 
@@ -62,19 +62,19 @@ abstract class ClockifyReport
         );
     }
 
-    public function users(array $userIds)
+    public function users(array $userIds): self
     {
         $this->userIds = $userIds;
         return $this;
     }
 
-    public function tasks(array $taskIds)
+    public function tasks(array $taskIds): self
     {
         $this->taskIds = $taskIds;
         return $this;
     }
 
-    public function sortOrder(string $sortOrder)
+    public function sortOrder(string $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;

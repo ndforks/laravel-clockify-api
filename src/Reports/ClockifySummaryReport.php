@@ -13,12 +13,12 @@ class ClockifySummaryReport extends ClockifyReport
         'TIMEENTRY',
     ];
 
-    public function get()
+    public function get(): mixed
     {
         return json_decode($this->executeApiCall()->body());
     }
 
-    protected function requestData()
+    protected function requestData(): array
     {
         return $this->filter((array) [
             'dateRangeStart' => $this->dateRangeStart,
@@ -52,13 +52,13 @@ class ClockifySummaryReport extends ClockifyReport
         ]);
     }
 
-    public function filterGroups(array $filterGroups)
+    public function filterGroups(array $filterGroups): self
     {
         $this->filterGroups = $filterGroups;
         return $this;
     }
 
-    public static function make()
+    public static function make(): static
     {
         return new static;
     }

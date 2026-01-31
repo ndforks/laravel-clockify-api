@@ -11,24 +11,24 @@ class ClockifyDetailedReport extends ClockifyReport
 
     private int $pageSize = 50;
 
-    public function get()
+    public function get(): mixed
     {
         return json_decode($this->executeApiCall()->body());
     }
 
-    public function page(int $page)
+    public function page(int $page): self
     {
         $this->page = $page;
         return $this;
     }
 
-    public function pageSize(int $pageSize)
+    public function pageSize(int $pageSize): self
     {
         $this->pageSize = $pageSize;
         return $this;
     }
 
-    protected function requestData()
+    protected function requestData(): array
     {
         return $this->filter((array) [
             'dateRangeStart' => $this->dateRangeStart,
@@ -64,7 +64,7 @@ class ClockifyDetailedReport extends ClockifyReport
         ]);
     }
 
-    public static function make()
+    public static function make(): static
     {
         return new static;
     }

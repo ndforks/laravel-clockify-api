@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ruleset name="phmd">
     <description>The coding standard for this project.</description>
-    <exclude-pattern name="">*/tests/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
     <rule ref="rulesets/cleancode.xml">
       <exclude name="StaticAccess" />
       <exclude name="IfStatementAssignment" />

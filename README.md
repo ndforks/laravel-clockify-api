@@ -73,7 +73,7 @@ $summaryResponseBody = ClockifyRepository::makeSummaryReport()
 | `tasks` | `tasks(array $taskIds)` | all | ALL |
 | `containsTags` | `containsTags(array $tagIds)` | `CONTAINS` | ALL |
 | `containsOnlyTags` | `containsOnlyTags(array $tagIds)` | `CONTAINS` | ALL |
-| `doesNotContainTags` | `doesNotContainTags(array $tagIds)` | `CONTAINS` | ALL || `tasks` | `tasks(array $taskIds)` | all | ALL |
+| `doesNotContainTags` | `doesNotContainTags(array $tagIds)` | `CONTAINS` | ALL |
 | `from` | `from(Carbon $fromDate)` | start of current year | ALL |
 | `to` | `to(Carbon $endDate)` | end of current year | ALL |
 | `sortOrder` | `sortOrder(string $sortOrder)` | `DESCENDING` | ALL |
