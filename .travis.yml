@@ -1,0 +1,21 @@
+language: php
+
+php:
+  - 8.1
+  - nightly
+
+jobs:
+  include:
+  - php: 8.1
+    env: COMPOSER_FLAGS="--prefer-lowest"
+  allow_failures:
+  - php: nightly
+
+before_script:
+  - travis_retry composer self-update
+  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-source
+
+script:
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+  - vendor/bin/phpcs -s
+  - vendor/bin/phpmd config,src,tests text phpmd.xml
